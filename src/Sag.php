@@ -178,13 +178,13 @@ class Sag
 
       if($response->headers->_HTTP->status == 304)
         return $prevResponse; //cache hit
-      
-      $this->cache->remove($url); 
+
+      $this->cache->remove($url);
     }
 
     //Not caching, or we are caching but there's nothing cached yet, or our
     //cached item is no longer good.
-    if(!$response)
+    if(!isset($response))
       $response = $this->procPacket('GET', $url);
 
     if($this->cache)
@@ -308,7 +308,7 @@ class Sag
 
   /**
    * Bulk pushes documents to the database.
-   * 
+   *
    * This function does not leverage the caching mechanism you specify with
    * setCache().
    *
@@ -372,7 +372,7 @@ class Sag
       "Destination" => "$dstID".(($dstRev) ? "?rev=$dstRev" : "")
     );
 
-    $response = $this->procPacket('COPY', "/{$this->db}/$srcID", null, $headers); 
+    $response = $this->procPacket('COPY', "/{$this->db}/$srcID", null, $headers);
 
     if($this->cache)
       $this->cache->set("/$dstID", $response);
@@ -719,7 +719,7 @@ class Sag
 
   /*
    * Pass an implementation of the SagCache, such as SagFileCache, that will be
-   * used when retrieving objects. It is taken and stored as a reference. 
+   * used when retrieving objects. It is taken and stored as a reference.
    *
    * @param SagCache An implementation of SagCache (ex., SagFileCache).
    * @return Sag Returns $this.
@@ -735,7 +735,7 @@ class Sag
   }
 
   /**
-   * Returns the cache object that's currently being used. 
+   * Returns the cache object that's currently being used.
    *
    * @return SagCache
    */
@@ -818,7 +818,7 @@ class Sag
       $headers['Content-Type'] = 'application/json';
 
     if($data)
-      $headers['Content-Length'] = strlen($data); 
+      $headers['Content-Length'] = strlen($data);
 
     $buff = "$method $url HTTP/1.0\r\n";
     foreach($headers as $k => $v)
@@ -882,7 +882,7 @@ class Sag
 
     // Read in the response.
     while(
-      !feof($sock) && 
+      !feof($sock) &&
       (
         $isHeader ||
         (
@@ -940,7 +940,7 @@ class Sag
               {
                 $crumbs = explode('=', $cookie);
                 $response->cookies->{trim($crumbs[0])} = trim($crumbs[1]);
-              } 
+              }
             }
           }
         }
@@ -995,7 +995,7 @@ class Sag
   private function setURLParameter($url, $key, $value)
   {
     $url = parse_url($url);
-    
+
     parse_str($url['query'], $params);
     $params[$key] = $value;
 
