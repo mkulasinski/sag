@@ -964,7 +964,7 @@ class Sag
      * attachment as text/plain and then expecting it to be parsed by
      * json_decode().
      */
-    $json = json_decode($response->body);
+    $json = json_decode($response->body, TRUE);
 
     if(isset($json))
     {
