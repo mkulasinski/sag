@@ -826,9 +826,9 @@ class Sag
 
     $buff .= "\r\n$data"; //it's okay if $data isn't set
 
-    if($data && $method !== "PUT")
+    if($data && ($method !== "PUT" && $method !== 'POST'))
       $buff .= "\r\n\r\n";
-
+      
     // Open the socket only once we know everything is ready and valid.
     $sock = null;
 
@@ -950,7 +950,7 @@ class Sag
     }
 
     //We're done with the socket, so someone else can use it.
-    if($response->headers->Connection == 'Keep-Alive')
+    if(isset($response->headers->Connection) && $response->headers->Connection == 'Keep-Alive')
       $this->connPool[] = $sock;
 
     //Make sure we got the complete response.
