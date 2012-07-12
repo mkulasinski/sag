@@ -297,7 +297,6 @@ class Sag
 
     if(!is_string($data))
       $data = json_encode($data);
-
     if(is_string($path) && !empty($path))
       $path = ((substr($path, 0, 1) != '/') ? '/' : '').$path;
     elseif(isset($path))
@@ -799,7 +798,7 @@ class Sag
     $url = str_replace(array(" ", "\""), array('%20', '%22'), $url);
 
     // Build the request packet.
-    $headers["Host"] = "{$this->host}:{$this->port}";
+    $headers["Host"] = "{$this->host}:".($this->port=='80'?'':$this->port);
     $headers["User-Agent"] = "Sag/0.5";
     $headers["Connection"] = "Keep-Alive";
 
@@ -819,6 +818,8 @@ class Sag
 
     if($data)
       $headers['Content-Length'] = strlen($data);
+    else
+    	$headers['Content-Length'] = 0;
 
     $buff = "$method $url HTTP/1.0\r\n";
     foreach($headers as $k => $v)
